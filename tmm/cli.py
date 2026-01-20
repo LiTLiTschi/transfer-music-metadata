@@ -60,16 +60,14 @@ Supported tags: initial_key, label, comment, cover_art, album
         version=f'%(prog)s {__version__}'
     )
 
-    # Required arguments
+    # Required arguments (except when using --generate-config)
     parser.add_argument(
         '-s', '--source',
-        required=True,
         help='Source directory containing audio files to read metadata from'
     )
 
     parser.add_argument(
         '-t', '--target',
-        required=True,
         help='Target directory containing audio files to write metadata to'
     )
 
@@ -165,7 +163,12 @@ def run_cli(args: Optional[List[str]] = None) -> int:
             print_error(f"Failed to generate configuration file: {e}")
             return 1
 
-    # Validate required arguments
+    # Validate required arguments (source and target are required for normal operation)
+    if not parsed_args.source or not parsed_args.target:
+        print_error("Error: --source and --target are required")
+        print_error("Use 'tmm --help' for usage information")
+        return 1
+
     try:
         source_dir = validate_directory(parsed_args.source, "Source directory")
         target_dir = validate_directory(parsed_args.target, "Target directory")

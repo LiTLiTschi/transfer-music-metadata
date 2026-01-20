@@ -7,7 +7,7 @@ Logging, error handling, and other helper functions.
 import logging
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Any
 from colorama import Fore, Style, init as colorama_init
 
 
