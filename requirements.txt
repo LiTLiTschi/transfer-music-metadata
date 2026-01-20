@@ -1,0 +1,4 @@
+mutagen>=1.47.0
+pyyaml>=6.0
+colorama>=0.4.6
+tqdm>=4.66.0

@@ -1,0 +1,52 @@
+# Transfer Music Metadata (TMM) Configuration File
+# This file defines the default behavior for metadata transfer operations
+
+# Tags to transfer from source to target files
+# Available tags: initial_key, label, comment, cover_art, album, title, artist
+tags_to_transfer:
+  - initial_key  # PRIORITY: Musical key of the track
+  - label        # Record label
+  - comment      # Comments/notes
+  - cover_art    # Album artwork (image)
+  - album        # Album name
+
+# File matching strategy
+# - filename: Match by filename (without extension)
+# - metadata: Match by title and artist metadata
+# - both: Try filename first, then fall back to metadata
+matching_strategy: filename
+
+# Overwrite policy for each tag
+# - always: Always overwrite existing tag
+# - never: Never overwrite (skip if exists)
+# - if_empty: Only write if target tag is empty
+overwrite_policy:
+  initial_key: always    # Initial key is priority - always overwrite
+  label: if_empty
+  comment: if_empty
+  cover_art: if_empty
+  album: if_empty
+
+# File extensions to process
+file_extensions:
+  # Source files (where to read metadata from)
+  source:
+    - .mp3
+
+  # Target files (where to write metadata to)
+  # M4A is priority format
+  target:
+    - .m4a
+    - .wav
+    - .mp3
+    - .flac
+
+# Logging configuration
+logging:
+  level: INFO            # DEBUG, INFO, WARNING, ERROR, CRITICAL
+  file: tmm.log          # Log file path
+  console: true          # Enable console logging
+
+# General options
+dry_run: false           # Preview changes without modifying files
+recursive: true          # Scan subdirectories recursively

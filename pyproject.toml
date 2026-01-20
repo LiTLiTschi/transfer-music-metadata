@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transfer-music-metadata"
+version = "1.0.0"
+description = "Transfer metadata tags between audio files (MP3, M4A, FLAC, WAV)"
+authors = [{name = "Transfer Music Metadata"}]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+keywords = ["audio", "metadata", "music", "tags", "id3", "mp4", "flac", "transfer"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio",
+]
+
+dependencies = [
+    "mutagen>=1.47.0",
+    "pyyaml>=6.0",
+    "colorama>=0.4.6",
+    "tqdm>=4.66.0",
+]
+
+[project.scripts]
+tmm = "tmm.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/LiTLiTschi/transfer-music-metadata"
+Repository = "https://github.com/LiTLiTschi/transfer-music-metadata"
