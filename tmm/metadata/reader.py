@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Optional, Any
 import mutagen
 from mutagen.id3 import ID3, APIC, COMM
-from mutagen.mp4 import MP4, MP4Cover
+from mutagen.mp4 import MP4, MP4Cover, MP4FreeForm
 from mutagen.flac import FLAC, Picture
 from mutagen.wave import WAVE
 from mutagen.aiff import AIFF
@@ -58,7 +58,7 @@ class MetadataReader:
         Returns:
             Tag value or None if not found
         """
-        if not self.audio_file or not self.format_type:
+        if self.audio_file is None or not self.format_type:
             return None
 
         mappings = TAG_MAPPINGS.get(self.format_type, {})
@@ -122,8 +122,14 @@ class MetadataReader:
             if format_tag in self.audio_file.tags:
                 values = self.audio_file.tags[format_tag]
                 if values:
-                    # Freeform atoms return bytes
-                    return values[0].decode('utf-8') if isinstance(values[0], bytes) else str(values[0])
+                    # Freeform atoms can be MP4FreeForm objects or bytes
+                    value = values[0]
+                    if isinstance(value, MP4FreeForm):
+                        return value.decode('utf-8')
+                    elif isinstance(value, bytes):
+                        return value.decode('utf-8')
+                    else:
+                        return str(value)
             return None
         else:
             # Handle standard atoms
@@ -143,7 +149,12 @@ class MetadataReader:
             return None
         else:
             # Handle vorbis comments
-            if format_tag.lower() in self.audio_file:
+            # Try uppercase first (standard convention), then lowercase for compatibility
+            if format_tag.upper() in self.audio_file:
+                values = self.audio_file[format_tag.upper()]
+                if values:
+                    return values[0]
+            elif format_tag.lower() in self.audio_file:
                 values = self.audio_file[format_tag.lower()]
                 if values:
                     return values[0]

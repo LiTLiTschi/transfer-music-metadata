@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Dict, Optional, Any
 import mutagen
 from mutagen.id3 import ID3, APIC, COMM, TKEY, TPUB, TALB, TIT2, TPE1
-from mutagen.mp4 import MP4, MP4Cover
+from mutagen.mp4 import MP4, MP4Cover, MP4FreeForm
 from mutagen.flac import FLAC, Picture
 from mutagen.wave import WAVE
 from mutagen.aiff import AIFF
@@ -62,7 +62,7 @@ class MetadataWriter:
         Returns:
             True if successful, False otherwise
         """
-        if not self.audio_file or not self.format_type or value is None:
+        if self.audio_file is None or not self.format_type or value is None:
             return False
 
         mappings = TAG_MAPPINGS.get(self.format_type, {})
@@ -151,8 +151,8 @@ class MetadataWriter:
             return False
         elif tag_name in ['initial_key', 'label']:
             # Handle freeform atoms
-            # M4A freeform atoms need bytes
-            self.audio_file.tags[format_tag] = [str(value).encode('utf-8')]
+            # M4A freeform atoms need to be wrapped in MP4FreeForm
+            self.audio_file.tags[format_tag] = [MP4FreeForm(str(value).encode('utf-8'))]
             return True
         else:
             # Handle standard atoms
@@ -178,7 +178,8 @@ class MetadataWriter:
             return False
         else:
             # Handle vorbis comments
-            self.audio_file[format_tag.lower()] = str(value)
+            # Use uppercase for standard convention (e.g., INITIALKEY, ALBUM, etc.)
+            self.audio_file[format_tag.upper()] = str(value)
             return True
 
     def _write_wav_aiff_tag(self, tag_name: str, format_tag: str, value: Any) -> bool:
