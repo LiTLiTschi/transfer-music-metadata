@@ -40,6 +40,10 @@ tmm.log
 config.yaml
 !config/default_config.yaml
 
+# Test files
+test_*.py
+tests/temp/
+
 # OS
 .DS_Store
 Thumbs.db
