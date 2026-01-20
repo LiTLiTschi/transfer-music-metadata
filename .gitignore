@@ -43,6 +43,7 @@ config.yaml
 # Test files
 test_*.py
 tests/temp/
+*.backup
 
 # OS
 .DS_Store
