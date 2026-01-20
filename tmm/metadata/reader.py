@@ -119,17 +119,24 @@ class MetadataReader:
             return None
         elif tag_name in ['initial_key', 'label']:
             # Handle freeform atoms
-            if format_tag in self.audio_file.tags:
-                values = self.audio_file.tags[format_tag]
-                if values:
-                    # Freeform atoms can be MP4FreeForm objects or bytes
-                    value = values[0]
-                    if isinstance(value, MP4FreeForm):
-                        return value.decode('utf-8')
-                    elif isinstance(value, bytes):
-                        return value.decode('utf-8')
-                    else:
-                        return str(value)
+            # For initial_key, check both Rekordbox (KEY) and Traktor (initialkey) formats
+            tags_to_check = [format_tag]
+            if tag_name == 'initial_key' and format_tag == '----:com.apple.iTunes:KEY':
+                # Also check Traktor format for backwards compatibility
+                tags_to_check.append('----:com.apple.iTunes:initialkey')
+
+            for tag in tags_to_check:
+                if tag in self.audio_file.tags:
+                    values = self.audio_file.tags[tag]
+                    if values:
+                        # Freeform atoms can be MP4FreeForm objects or bytes
+                        value = values[0]
+                        if isinstance(value, MP4FreeForm):
+                            return value.decode('utf-8')
+                        elif isinstance(value, bytes):
+                            return value.decode('utf-8')
+                        else:
+                            return str(value)
             return None
         else:
             # Handle standard atoms

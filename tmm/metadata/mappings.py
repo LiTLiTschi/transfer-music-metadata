@@ -17,7 +17,7 @@ TAG_MAPPINGS = {
         'artist': 'TPE1',
     },
     'm4a': {
-        'initial_key': '----:com.apple.iTunes:initialkey',  # Freeform atom
+        'initial_key': '----:com.apple.iTunes:KEY',  # Freeform atom (Rekordbox compatible)
         'label': '----:com.apple.iTunes:LABEL',  # Freeform atom
         'comment': '©cmt',  # Comment atom
         'cover_art': 'covr',  # Cover art atom
